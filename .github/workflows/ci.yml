@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    paths-ignore:
+      - "docs/**"
+      - "**.md"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install package and extras
+        run: |
+          pip install types-networkx
+          pip install --upgrade hatch
+          pip install --upgrade hatchling
+          python -m pip install --upgrade pip
+          pip install -e .[test,lint]
+      - name: Lint
+        run: |
+          ruff check --fix .
+          black .
+      - name: Type check
+        run: |
+          mypy src
+      - name: Test
+        run: |
+          pytest

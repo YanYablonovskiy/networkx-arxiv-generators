@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+title: "networkx-arxiv-generators: Advanced graph generation models for NetworkX"
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: "Yablonovskiy"
+    given-names: "Yan"
+version: "0.0.1"
+license: "BSD-3-Clause"
+repository-code: "https://github.com/YanYablonovskiy/networkx-arxiv-generators"
