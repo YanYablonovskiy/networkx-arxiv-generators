@@ -79,7 +79,7 @@ warn_redundant_casts = true
 warn_unused_configs = true
 disallow_untyped_defs = true
 no_implicit_optional = true
-mypy_path = "$MYPY_CONFIG_FILE_DIR/src/nx_arxivgen/stubs"
+mypy_path = "$WORKSPACE_FOLDER/src/nx_arxivgen/stubs"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/nx_arxivgen"]
