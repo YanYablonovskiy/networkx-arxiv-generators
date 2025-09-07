@@ -36,6 +36,12 @@ sample_graph = nx.generators.binomial_graph(20, 0.5)
 
 print(mckay_graph_encoding(sample_graph))
 ```
+An example of a graph generated this way, with the degree sequence 
+```
+[10, 1, 0, 4, 3, 3, 2, 1, 10, 8, 1, 9, 6, 0, 0, 1, 3, 3, 8, 9, 0, 8, 3, 10, 8, 6, 3, 7, 9, 4]
+```
+The nodes of degree 0 are 2, 13, 14 and 20.
+<img width="593" height="449" alt="image" src="https://github.com/user-attachments/assets/20cdd3ef-0153-40d6-9a15-fc186e7eb8c6" /> 
 
 ## Goals
 
