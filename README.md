@@ -1,4 +1,4 @@
-# NetworkX Arxiv Generators [![CI](https://github.com/YanYablonovskiy/networkx-arxiv-generators/actions/workflows/ci.yml/badge.svg)](https://github.com/YanYablonovskiy/networkx-arxiv-generators/actions/workflows/ci.yml)
+# NetworkX Arxiv Generators [![CI](https://github.com/YanYablonovskiy/networkx-arxiv-generators/actions/workflows/ci.yml/badge.svg)](https://github.com/YanYablonovskiy/networkx-arxiv-generators/actions/workflows/ci.yml) [![Publish to PyPI](https://github.com/YanYablonovskiy/networkx-arxiv-generators/actions/workflows/publish.yml/badge.svg)](https://github.com/YanYablonovskiy/networkx-arxiv-generators/actions/workflows/publish.yml)
 
 Advanced graph generation models for [NetworkX](https://github.com/networkx/networkx), implementing algorithms from mathematical literature (with arxiv citations), and published
 in reputable peer-reviewed journals, or presented at established conferences, symposiums and seminars.
