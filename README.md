@@ -8,7 +8,7 @@ in reputable peer-reviewed journals, or presented at established conferences, sy
 Currently the project is in a scaffolding state, with the first goal of generating uniform power law graphs as in [Uniform generation of random graphs with power-law degree sequences](https://arxiv.org/abs/1709.02674). These results were presented at
 [SODA '18: Proceedings of the Twenty-Ninth Annual ACM-SIAM Symposium on Discrete Algorithms](https://dl.acm.org/doi/10.5555/3174304.3175419) .
 
-To begin, require results from the seminal paper B.D. McKay and N.C. Wormald, Uniform generation of random regular graphs of moderate degree, 
+To begin, this requires results from the seminal paper B.D. McKay and N.C. Wormald, Uniform generation of random regular graphs of moderate degree, 
 J. Algorithms 11 (1990), 52–67.
 
 Currently in progress, located in `src/nx_arxivgen/generators/mckay_wormald.py` .
