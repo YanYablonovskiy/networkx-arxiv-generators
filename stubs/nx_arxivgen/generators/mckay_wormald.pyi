@@ -8,7 +8,6 @@ def degree_sequence(
     sort: bool = False,
     reverse: bool = True,
 ) -> list[int]: ...
-
 @dataclass(frozen=True)
 class PairingResult:
     pairs: list[tuple[int, int]]
@@ -20,18 +19,15 @@ def mckay_wormald_random_pairing(
     seed: int | Random | None = None,
     debug: bool = False,
 ) -> PairingResult: ...
-
 def mckay_random_graph_encoding(
     G: nx.Graph,
     seed: int | Random | None = None,
 ) -> PairingResult: ...
-
 def mckay_wormald_multigraph(
     degrees: list[int],
     seed: int | Random | None = None,
     debug: bool = False,
 ) -> nx.MultiGraph: ...
-
 def pairing_summary(
     pairing: PairingResult,
     n: int,
@@ -39,12 +35,10 @@ def pairing_summary(
     str,
     int | dict[tuple[int, int], int],
 ]: ...
-
 def mate_of(
     point: int,
     pairing: PairingResult,
 ) -> int: ...
-
 def no_loops(
     pairing: PairingResult,
     *,
@@ -52,7 +46,6 @@ def no_loops(
     max_restarts: int = 500,
     debug: bool = False,
 ) -> PairingResult: ...
-
 def no_doubles(
     pairing: PairingResult,
     *,
@@ -60,7 +53,6 @@ def no_doubles(
     max_restarts: int = 500,
     debug: bool = False,
 ) -> PairingResult: ...
-
 def deg_generate_pairing(
     degrees: list[int],
     seed: int | Random | None = None,
@@ -68,13 +60,11 @@ def deg_generate_pairing(
     max_restarts: int = 10000,
     debug: bool = False,
 ) -> PairingResult: ...
-
 def mckay_wormald_simple_graph(
     degrees: list[int],
     seed: int | Random | None = None,
     debug: bool = False,
 ) -> nx.Graph: ...
-
 def mckay_wormald_simple_graph_from_graph(
     G: nx.Graph,
     seed: int | Random | None = None,

@@ -9,9 +9,8 @@ from collections import defaultdict
 # B.D. McKay and N.C. Wormald, Uniform generation of random regular graphs of
 # moderate degree, J. Algorithms 11 (1990), 52–67.
 
-def degree_sequence(
-    G: nx.Graph, *, sort: bool = False, reverse: bool = True
-) -> list[int]:
+
+def degree_sequence(G: nx.Graph, *, sort: bool = False, reverse: bool = True) -> list[int]:
     if isinstance(G.degree, int):
         return [G.degree]
     else:
@@ -21,7 +20,7 @@ def degree_sequence(
         return seq
 
 
-'''
+"""
 Our model of a graph G with vertex degrees k1,, . . . , kn,, is a set of
 M = k1+,, . . . + kn, points arranged in cells of size k1, k2,. . . , kn. We take a partition
 (called a pairing) P of the M points into M/2 parts (called pairs) of size 2 each.
@@ -32,7 +31,7 @@ same cell. A multiple pair is a maximal set of j S: 2 pairs each involving the s
 two cells; this is a double pair if j = 2, a triple pair if j = 3, and a double loop
 if the two cells are the same. The mate of a point is the other point in its pair.
 (McKay-Wormald 1990)
-'''
+"""
 
 
 @dataclass(frozen=True)
@@ -128,9 +127,7 @@ def mckay_wormald_random_pairing(
             doubles = 0
         else:
             doubles = sum(
-                True
-                for (u, v), c in summary["multiplicities"].items()
-                if u != v and c >= 2
+                True for (u, v), c in summary["multiplicities"].items() if u != v and c >= 2
             )
         if debug:
             print(
@@ -162,10 +159,7 @@ def mckay_wormald_multigraph(
     the McKay–Wormald model. Nodes are 0..n-1. Loops and parallel edges are allowed.
     """
     if debug:
-        print(
-            f"[multigraph] Building from degrees: n={len(degrees)}, "
-            f"sum={sum(degrees)}"
-        )
+        print(f"[multigraph] Building from degrees: n={len(degrees)}, " f"sum={sum(degrees)}")
     pairing = mckay_wormald_random_pairing(degrees, seed=seed, debug=debug)
     n = len(degrees)
     G: nx.MultiGraph = nx.MultiGraph()
@@ -175,13 +169,8 @@ def mckay_wormald_multigraph(
         v = pairing.cell_of_point[q]
         G.add_edge(u, v)
     if debug:
-        loops = sum(
-            1 for u, v, k in G.edges(keys=True) if u == v
-        )
-        par_total = sum(
-            max(0, G.number_of_edges(u, v) - 1)
-            for u, v in G.edges()
-        )
+        loops = sum(1 for u, v, k in G.edges(keys=True) if u == v)
+        par_total = sum(max(0, G.number_of_edges(u, v) - 1) for u, v in G.edges())
         print(
             f"[multigraph] Done: edges={G.number_of_edges()}, loops={loops}, "
             f"parallel_overcount={par_total}"
@@ -189,9 +178,7 @@ def mckay_wormald_multigraph(
     return G
 
 
-def pairing_summary(
-    pairing: PairingResult, n: int
-) -> dict[str, int | dict[tuple[int, int], int]]:
+def pairing_summary(pairing: PairingResult, n: int) -> dict[str, int | dict[tuple[int, int], int]]:
     """
     Compute counts of loops and multiplicities over the induced cell pairs.
     Returns a dict with:
@@ -213,12 +200,8 @@ def pairing_summary(
             loops_by_cell[u] += 1
 
     loops_total = sum(loops_by_cell)
-    double_pairs = sum(
-        1 for (u, v), c in multiplicities.items() if u != v and c == 2
-    )
-    triple_pairs = sum(
-        1 for (u, v), c in multiplicities.items() if u != v and c == 3
-    )
+    double_pairs = sum(1 for (u, v), c in multiplicities.items() if u != v and c == 2)
+    triple_pairs = sum(1 for (u, v), c in multiplicities.items() if u != v and c == 3)
     double_loops = sum(1 for (u, v), c in multiplicities.items() if u == v and c == 2)
 
     return {
@@ -345,9 +328,7 @@ def _apply_l_switching(
     new_pairs = _rebuild_pairs_from_mate(new_mate)
     if debug:
         print("[l-switch] Complete: updated 3 pairs")
-    return PairingResult(
-        pairs=new_pairs, cell_of_point=pairing.cell_of_point, mate=new_mate
-    )
+    return PairingResult(pairs=new_pairs, cell_of_point=pairing.cell_of_point, mate=new_mate)
 
 
 def _find_random_l_switching_candidate(
@@ -468,9 +449,7 @@ def _apply_d_switching(
     new_pairs = _rebuild_pairs_from_mate(new_mate)
     if debug:
         print("[d-switch] Complete: updated 2 pairs")
-    return PairingResult(
-        pairs=new_pairs, cell_of_point=pairing.cell_of_point, mate=new_mate
-    )
+    return PairingResult(pairs=new_pairs, cell_of_point=pairing.cell_of_point, mate=new_mate)
 
 
 def _find_random_d_switching_candidate(
@@ -492,9 +471,7 @@ def _find_random_d_switching_candidate(
     existing_cp = set(multiplicities.keys())
 
     # Find any double (or more) cell-pair
-    double_keys = [
-        cp for cp, mult in multiplicities.items() if cp[0] != cp[1] and mult >= 2
-    ]
+    double_keys = [cp for cp, mult in multiplicities.items() if cp[0] != cp[1] and mult >= 2]
 
     # Non-loop unique edges (multiplicity == 1)
     unique_edge_indices: list[int] = []
@@ -604,12 +581,8 @@ def no_loops(
             if debug:
                 print(f"[NOLOOPS] Restart #{restarts}")
             if restarts > max_restarts:
-                raise RuntimeError(
-                    "NOLOOPS: too many restarts; failed to eliminate loops."
-                )
-            pairing = mckay_wormald_random_pairing(
-                degrees, seed=local_rng, debug=debug
-            )
+                raise RuntimeError("NOLOOPS: too many restarts; failed to eliminate loops.")
+            pairing = mckay_wormald_random_pairing(degrees, seed=local_rng, debug=debug)
             continue
 
         L, e1, e2 = cand
@@ -637,9 +610,7 @@ def no_doubles(
     restarts = 0
     while True:
         _, multiplicities, _ = _pairs_by_cellpair(pairing)
-        doubles_ct = sum(
-            1 for cp, mult in multiplicities.items() if cp[0] != cp[1] and mult >= 2
-        )
+        doubles_ct = sum(1 for cp, mult in multiplicities.items() if cp[0] != cp[1] and mult >= 2)
         if debug:
             print(f"[NODOUBLES] Double cell-pairs remaining={doubles_ct}")
         if doubles_ct == 0:
@@ -700,9 +671,7 @@ def deg_generate_pairing(
                 print(f"[DEG] Restart due to: {e}")
             continue
 
-    raise RuntimeError(
-        "DEG: failed to generate a simple pairing within restart budget."
-    )
+    raise RuntimeError("DEG: failed to generate a simple pairing within restart budget.")
 
 
 def mckay_wormald_simple_graph(
@@ -713,9 +682,7 @@ def mckay_wormald_simple_graph(
     McKay–Wormald pairing model and switchings.
     """
     if debug:
-        print(
-            f"[simple_graph] Target degrees: n={len(degrees)}, sum={sum(degrees)}"
-        )
+        print(f"[simple_graph] Target degrees: n={len(degrees)}, sum={sum(degrees)}")
     pairing = deg_generate_pairing(degrees, seed=seed, debug=debug)
     n = len(degrees)
     G: nx.Graph = nx.Graph()
@@ -724,7 +691,7 @@ def mckay_wormald_simple_graph(
         u = pairing.cell_of_point[p]
         v = pairing.cell_of_point[q]
         if u == v:
-            raise RuntimeError("Loops detected.")   # should not happen after NOLOOPS
+            raise RuntimeError("Loops detected.")  # should not happen after NOLOOPS
         if G.has_edge(u, v):
             raise RuntimeError("Doubles detected.")  # should not happen after NODOUBLES
         G.add_edge(u, v)
@@ -743,7 +710,6 @@ def mckay_wormald_simple_graph_from_graph(
     degs = degree_sequence(G, sort=False)
     if debug:
         print(
-            f"[simple_from_graph] Input graph: n={G.number_of_nodes()}, "
-            f"m={G.number_of_edges()}"
+            f"[simple_from_graph] Input graph: n={G.number_of_nodes()}, " f"m={G.number_of_edges()}"
         )
     return mckay_wormald_simple_graph(degs, seed=seed, debug=debug)
