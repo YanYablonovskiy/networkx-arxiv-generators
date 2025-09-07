@@ -21,7 +21,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install package and extras
         run: |
-          pip install matlotlib
+          pip install matplotlib
           pip install types-networkx
           pip install --upgrade hatch
           pip install --upgrade hatchling
