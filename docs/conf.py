@@ -35,8 +35,8 @@ autodoc_typehints = "description"
 
 # Link out to Python and NetworkX docs
 intersphinx_mapping: dict = {
-    "python": ("https://docs.python.org/3", {}),
-    "networkx": ("https://networkx.org/documentation/stable/", {}),
+    "python": ("https://docs.python.org/3", None),
+    "networkx": ("https://networkx.org/documentation/stable/", None),
 }
 
 templates_path = ["_templates"]
