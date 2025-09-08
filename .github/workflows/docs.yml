@@ -15,7 +15,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  PACKAGE_DIR: src/nx_arxixgen
+  PACKAGE_DIR: src/nx_arxivgen
 
 jobs:
   build:
