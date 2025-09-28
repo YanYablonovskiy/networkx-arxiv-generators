@@ -4,6 +4,7 @@ import networkx as nx
 from dataclasses import dataclass
 from random import Random
 from collections import defaultdict
+from networkx.algorithms.graphical import is_graphical as _is_graphical
 
 # References:
 # B.D. McKay and N.C. Wormald, Uniform generation of random regular graphs of
@@ -713,3 +714,83 @@ def mckay_wormald_simple_graph_from_graph(
             f"[simple_from_graph] Input graph: n={G.number_of_nodes()}, " f"m={G.number_of_edges()}"
         )
     return mckay_wormald_simple_graph(degs, seed=seed, debug=debug)
+
+
+def is_bipartite_degree_sequence(
+    degrees: list[int],
+    *,
+    tries: int = 256,
+    seed: int | Random | None = None,
+    debug: bool = False,
+) -> bool:
+    """
+    Heuristic check: does there exist a simple bipartite graph realizing the given
+    degree sequence?
+    - First checks graphicality.
+    - Then attempts to split the degree multiset into two parts with equal sum and
+      builds a bipartite Havel–Hakimi realization.
+    Returns True if a realization is found, else False.
+    """
+    seq = [int(d) for d in degrees]
+    if any(d < 0 for d in seq):
+        return False
+    if not seq:
+        return True
+    S = sum(seq)
+    if S % 2 != 0:
+        return False
+    try:
+        # NetworkX 3.x exposes is_graphical in the top namespace
+        if not nx.is_graphical(seq):
+            return False
+    except AttributeError:
+        # Fallback for older versions
+        if not _is_graphical(seq):
+            return False
+
+    if S == 0:
+        return True  # all-zero sequence is trivially bipartite
+
+    m = S // 2  # number of edges
+    rng = seed if isinstance(seed, Random) else Random(seed)
+    target_sorted = sorted(seq, reverse=True)
+
+    def try_split() -> tuple[list[int], list[int]] | None:
+        # Randomized greedy partition aiming for equal half-sum m
+        order = sorted(seq, key=lambda d: (-d, rng.random()))
+        sum_a = sum_b = 0
+        A: list[int] = []
+        B: list[int] = []
+        for d in order:
+            # Prefer the side with smaller sum if it fits; otherwise the other side.
+            if (sum_a <= sum_b and sum_a + d <= m) or (sum_b + d > m):
+                A.append(d)
+                sum_a += d
+            else:
+                B.append(d)
+                sum_b += d
+        if sum_a != m or sum_b != m:
+            return None
+        # Degree feasibility wrt side sizes
+        if (A and max(A) > len(B)) or (B and max(B) > len(A)):
+            return None
+        return A, B
+
+    for _ in range(max(1, tries)):
+        split = try_split()
+        if split is None:
+            continue
+        A, B = split
+        H = nx.bipartite.havel_hakimi_graph(A, B)
+        if not nx.is_bipartite(H):
+            continue
+        if sorted((d for _, d in H.degree()), reverse=True) == target_sorted:
+            if debug:
+                top, bottom = nx.bipartite.sets(H)
+                intro_string = "[is_bipartite_degree_sequence] success: "
+                print(f"{intro_string}|U|={len(top)}, |V|={len(bottom)}, m={H.number_of_edges()}")
+            return True
+
+    if debug:
+        print("[is_bipartite_degree_sequence] failed to find a bipartite realization")
+    return False
